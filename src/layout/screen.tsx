@@ -1,6 +1,6 @@
 function Screen(){
     return(
-        <div>
+        <div className="w-auto place-content-center h-auto">
             
         </div>
     )
