@@ -1,8 +1,8 @@
 function Screen(){
     return(
-        <div className="w-80 h-auto bg-yellow p-2 grid justify-center">
-            <div className="grid grid-cols-3 gap-4">
-                <div>
+        <div className="w-4/5 h-auto bg-yellow-100 p-2 grid justify-center">
+            <div className="grid grid-cols-2 gap-6 justify-center">
+                <div className="w-10">
                     <p>Break Lenght</p>
                     <div>
                         25
@@ -13,9 +13,7 @@ function Screen(){
                     <div>
                         25
                     </div>
-
                 </div>
-
             </div>
             <div className="grid grid-cols-1 gap-0">
                 <div className="bg-white p-1">
