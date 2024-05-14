@@ -1,10 +1,10 @@
 function Screen(){
     return(
-        <div className="h-auto bg-yellow-100 p-2 grid justify-center">
+        <div className="h-auto bg-darkGreen p-2 grid justify-center">
             <div className="grid grid-cols-2 gap-20 justify-center w-full px-20 py-10">
                 <div className="w-full">
                     <p className="text-center">Break Lenght</p>
-                    <div className="flex flex-row align-middle p-2 h-15">
+                    <div className="flex flex-row align-middle p-2 h-15 bg-lightGreen">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-up-circle basis-1/3 h-auto" viewBox="0 0 16 16">
                             <path className="align-middle" fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z"/>
                         </svg>
