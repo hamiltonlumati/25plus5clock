@@ -27,7 +27,7 @@ function Screen(){
                     </div>
                 </div>
             </div>
-            <div className="grid justify-center rounded bg-dark text-lightGreen w-auto mx-52 py-2">
+            <div className="grid justify-center rounded-lg bg-dark text-lightGreen w-auto mx-52 py-2">
                 <p className="bg-white p-1 text-center text-lg">
                     Session
                 </p>
