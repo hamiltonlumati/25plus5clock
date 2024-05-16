@@ -9,7 +9,64 @@ interface State{
 type Action = {type: 'sessionIncrement'} | {type: 'sessionDecrement'} | {type: 'breakIncrement'} | {type: 'breakDecrement'} | {type: 'timer'} | {type: 'restart'};
 
 const reducer = (state: State, action: Action): State =>{
+    switch(action.type){
+        case 'sessionIncrement':
+            return{
+                sessionLenght: state.sessionLenght+1,
+                breakLenght: state.breakLenght,
+                timerStatus: state.timerStatus
+            }
+        
+        case 'sessionDecrement':
+            if(state.sessionLenght > 1){
+                return{
+                    sessionLenght: state.sessionLenght-1,
+                    breakLenght: state.breakLenght,
+                    timerStatus: state.timerStatus
+                }
+            }else{
+                return{
+                    sessionLenght: state.sessionLenght,
+                    breakLenght: state.breakLenght,
+                    timerStatus: state.timerStatus
+                }
+            }
 
+        case 'breakIncrement':
+            return{
+                sessionLenght: state.sessionLenght,
+                breakLenght: state.breakLenght + 1,
+                timerStatus: state.timerStatus
+            }
+
+        case 'breakDecrement':
+            if(state.sessionLenght > 1){
+                return{
+                    sessionLenght: state.sessionLenght,
+                    breakLenght: state.breakLenght - 1,
+                    timerStatus: state.timerStatus
+                }
+            }else{
+                return{
+                    sessionLenght: state.sessionLenght,
+                    breakLenght: state.breakLenght,
+                    timerStatus: state.timerStatus
+                }
+            }
+        
+        case 'timer':
+            if(state.timerStatus == 'play'){
+
+            }else
+
+
+        case 'restart':
+            return{
+                sessionLenght: 25,
+                breakLenght: 5,
+                timerStatus: 'play'
+            }
+    }
 }
 
 function Screen(){
