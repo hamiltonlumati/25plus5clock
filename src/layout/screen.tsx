@@ -73,6 +73,23 @@ function Screen(){
     const initialState: State = {sessionLenght: 25, breakLenght: 5, timerStatus: 'play'}
 
     const [state, dispatch] = useReducer(reducer, initialState);
+
+    //Timers
+    
+    document.addEventListener("DOMContentLoaded", () => {
+        const startStopButton = document.getElementById("startStop");
+    
+        if(startStopButton){
+            startStopButton.onclick = () => {
+                for(let i: number = state.sessionLenght*60; i>=0; i--){
+                    setTimeout(() => {
+
+                    }, 1000)
+                }
+            }
+        }
+    })
+
     return(
         <div className="h-auto bg-darkGreen pb-10 grid justify-center rounded">
             <div className="grid grid-cols-2 gap-20 justify-center w-full px-20 py-10">
@@ -109,7 +126,7 @@ function Screen(){
                     60:00
                 </p>
                 <div className="flex flex-row gap-4 align-middle px-14 mt-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-play-circle hover:text-orange" viewBox="0 0 16 16">
+                    <svg id="startStop" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-play-circle hover:text-orange" viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                         <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/>
                     </svg>
