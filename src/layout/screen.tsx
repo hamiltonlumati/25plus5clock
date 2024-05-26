@@ -6,7 +6,7 @@ interface State{
     timerStatus: string
 }
 
-type Action = {type: 'sessionIncrement'} | {type: 'sessionDecrement'} | {type: 'breakIncrement'} | {type: 'breakDecrement'} | {type: 'timer'} | {type: 'restart'};
+type Action = {type: 'sessionIncrement'} | {type: 'sessionDecrement'} | {type: 'breakIncrement'} | {type: 'breakDecrement'} | {type: 'restart'} | {type: 'timerStart'};
 
 const reducer = (state: State, action: Action): State =>{
     switch(action.type){
@@ -54,16 +54,36 @@ const reducer = (state: State, action: Action): State =>{
                 }
             }
         
-        case 'timer':
-            if(state.timerStatus == 'play'){
-
-            }else
-
-
         case 'restart':
             return{
                 sessionLenght: 25,
                 breakLenght: 5,
+                timerStatus: 'play'
+            }
+
+        case 'timerStart':
+            let sessionMinutes: number = state.sessionLenght;
+
+            var now: any = new Date().getDate();
+            var targetDate: any = now.setMinutes(now.getMinutes() + sessionMinutes)
+            
+            var loopInterval = setInterval(function(){
+                var now: any = new Date().getDate();
+                var distance: any = targetDate - now;
+
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("sessionDisplay")!.innerHTML = minutes + ":" + seconds;
+
+                if (distance < 0) {
+                    clearInterval(loopInterval);
+                    document.getElementById("sessionDisplay")!.innerHTML = "00:00";
+                }
+            }, 1000);
+            return{
+                sessionLenght: state.sessionLenght,
+                breakLenght: state.breakLenght,
                 timerStatus: 'play'
             }
     }
@@ -75,20 +95,27 @@ function Screen(){
     const [state, dispatch] = useReducer(reducer, initialState);
 
     //Timers
-    
-    document.addEventListener("DOMContentLoaded", () => {
-        const startStopButton = document.getElementById("startStop");
-    
-        if(startStopButton){
-            startStopButton.onclick = () => {
-                for(let i: number = state.sessionLenght*60; i>=0; i--){
-                    setTimeout(() => {
+    document.getElementById("startStop")!.addEventListener("click", () => {
+        let sessionMinutes: number = state.sessionLenght;
 
-                    }, 1000)
-                }
+        var now: any = new Date().getDate();
+        var targetDate: any = now.setMinutes(now.getMinutes() + sessionMinutes)
+        
+        var loopInterval = setInterval(function(){
+            var now: any = new Date().getDate();
+            var distance: any = targetDate - now;
+
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("sessionDisplay")!.innerHTML = minutes + ":" + seconds;
+
+            if (distance < 0) {
+                clearInterval(loopInterval);
+                document.getElementById("sessionDisplay")!.innerHTML = "00:00";
             }
-        }
-    })
+        }, 1000);
+    });
 
     return(
         <div className="h-auto bg-darkGreen pb-10 grid justify-center rounded">
@@ -96,7 +123,7 @@ function Screen(){
                 <div className="w-auto">
                     <p className="text-center text-lightGreen mb-2 text-xl font-medium">Session Lenght</p>
                     <div className="flex flex-row gap-4 align-middle p-2 h-15 bg-lightGreen text-orange rounded-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" className="bi bi-arrow-up-circle basis-1/3 h-auto hover:text-dark" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" className="bi bi-arrow-up-circle basis-1/3 h-auto hover:text-dark" viewBox="0 0 16 16" onClick={() => {dispatch({type: 'breakIncrement'})}}>
                             <path className="align-middle" fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z"/>
                         </svg>
                         <span className="basis-1/3 text-center text-5xl">{state.sessionLenght}</span>
@@ -122,7 +149,7 @@ function Screen(){
                 <p className="bg-white p-1 text-center text-lg">
                     Session
                 </p>
-                <p className="text-center text-7xl">
+                <p className="text-center text-7xl" id="sessionDisplay">
                     60:00
                 </p>
                 <div className="flex flex-row gap-4 align-middle px-14 mt-2">
@@ -137,6 +164,7 @@ function Screen(){
                     </svg>
                 </div>
             </div>
+
         </div>
     )
 }
