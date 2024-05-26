@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-
+import moment from "moment";
 interface State{
     sessionLenght: number,
     breakLenght: number,
@@ -53,22 +53,15 @@ const reducer = (state: State, action: Action): State =>{
                     timerStatus: state.timerStatus
                 }
             }
-        
-        case 'restart':
-            return{
-                sessionLenght: 25,
-                breakLenght: 5,
-                timerStatus: 'play'
-            }
 
         case 'timerStart':
             let sessionMinutes: number = state.sessionLenght;
 
-            var now: any = new Date().getDate();
-            var targetDate: any = now.setMinutes(now.getMinutes() + sessionMinutes)
+            var now = moment();
+            var targetDate: any = now.add(sessionMinutes, 'm');
             
             var loopInterval = setInterval(function(){
-                var now: any = new Date().getDate();
+                var now: any = moment();
                 var distance: any = targetDate - now;
 
                 var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -80,10 +73,20 @@ const reducer = (state: State, action: Action): State =>{
                     clearInterval(loopInterval);
                     document.getElementById("sessionDisplay")!.innerHTML = "00:00";
                 }
+                document.getElementById('startStop')?.addEventListener('click', () => {
+                    clearInterval(loopInterval);
+                } )
             }, 1000);
             return{
                 sessionLenght: state.sessionLenght,
                 breakLenght: state.breakLenght,
+                timerStatus: 'play'
+            }
+        
+        case 'restart':
+            return{
+                sessionLenght: 25,
+                breakLenght: 5,
                 timerStatus: 'play'
             }
     }
@@ -137,7 +140,7 @@ function Screen(){
                         <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/>
                     </svg>
                     
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-arrow-repeat hover:text-orange" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-arrow-repeat hover:text-orange" viewBox="0 0 16 16" onClick={() => {dispatch({type: 'restart'})}}>
                         <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41m-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9"/>
                         <path fillRule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5 5 0 0 0 8 3M3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9z"/>
                     </svg>
