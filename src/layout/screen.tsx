@@ -3,7 +3,8 @@ import moment from "moment";
 interface State{
     sessionLenght: number,
     breakLenght: number,
-    timerStatus: string
+    timerStatus: string,
+    time: number[]
 }
 
 type Action = {type: 'sessionIncrement'} | {type: 'sessionDecrement'} | {type: 'breakIncrement'} | {type: 'breakDecrement'} | {type: 'restart'} | {type: 'timerStart'};
@@ -14,7 +15,8 @@ const reducer = (state: State, action: Action): State =>{
             return{
                 sessionLenght: state.sessionLenght+1,
                 breakLenght: state.breakLenght,
-                timerStatus: state.timerStatus
+                timerStatus: state.timerStatus,
+                time: [state.sessionLenght, 0]
             }
         
         case 'sessionDecrement':
@@ -22,13 +24,16 @@ const reducer = (state: State, action: Action): State =>{
                 return{
                     sessionLenght: state.sessionLenght-1,
                     breakLenght: state.breakLenght,
-                    timerStatus: state.timerStatus
+                    timerStatus: state.timerStatus,
+                    time: [state.sessionLenght, 0]
+
                 }
             }else{
                 return{
                     sessionLenght: state.sessionLenght,
                     breakLenght: state.breakLenght,
-                    timerStatus: state.timerStatus
+                    timerStatus: state.timerStatus,
+                    time: [state.sessionLenght, 0]
                 }
             }
 
@@ -36,7 +41,8 @@ const reducer = (state: State, action: Action): State =>{
             return{
                 sessionLenght: state.sessionLenght,
                 breakLenght: state.breakLenght + 1,
-                timerStatus: state.timerStatus
+                timerStatus: state.timerStatus,
+                time: [state.sessionLenght, 0]
             }
 
         case 'breakDecrement':
@@ -44,23 +50,25 @@ const reducer = (state: State, action: Action): State =>{
                 return{
                     sessionLenght: state.sessionLenght,
                     breakLenght: state.breakLenght - 1,
-                    timerStatus: state.timerStatus
+                    timerStatus: state.timerStatus,
+                    time: [state.sessionLenght, 0]
                 }
             }else{
                 return{
                     sessionLenght: state.sessionLenght,
                     breakLenght: state.breakLenght,
-                    timerStatus: state.timerStatus
+                    timerStatus: state.timerStatus,
+                    time: [state.sessionLenght, 0]
                 }
             }
 
         case 'timerStart':
-            var now: any = moment();
+            var now1: any = moment();
             var sessionMinutes: number = state.sessionLenght;
 
             document.getElementById('startStop')!.innerHTML = '<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z"/></svg>';
 
-            var targetDate: any = now.add(sessionMinutes, 'm');
+            var targetDate: any = now1.add(sessionMinutes, 'm');
             
             var loopInterval = setInterval(function(){
                 var now: any = moment();
@@ -80,28 +88,33 @@ const reducer = (state: State, action: Action): State =>{
                     clearInterval(loopInterval);
                 } )
             }, 1000);
-
+            var now2: any = moment();
+            var difference: any = targetDate - now2;
+            var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            
             return{
-                sessionLenght: state.sessionLenght,
+                sessionLenght: minutes + (seconds/60),
                 breakLenght: state.breakLenght,
-                timerStatus: 'play'
+                timerStatus: 'play',
+                time: [minutes, seconds]
+
             }
         
         case 'restart':
             return{
                 sessionLenght: 25,
                 breakLenght: 5,
-                timerStatus: 'play'
+                timerStatus: 'play',
+                time: [state.sessionLenght, 0]
             }
     }
 }
 
 function Screen(){
-    const initialState: State = {sessionLenght: 25, breakLenght: 5, timerStatus: 'stopped'}
+    const initialState: State = {sessionLenght: 25, breakLenght: 5, timerStatus: 'stopped', time: [25, 0]}
 
     const [state, dispatch] = useReducer(reducer, initialState);
-
-    //Timers
 
     return(
         <div className="h-auto bg-darkGreen pb-10 grid justify-center rounded">
@@ -112,7 +125,7 @@ function Screen(){
                         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" className="bi bi-arrow-up-circle basis-1/3 h-auto hover:text-dark" viewBox="0 0 16 16" onClick={() => {dispatch({type: 'sessionIncrement'})}}>
                             <path className="align-middle" fillRule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z"/>
                         </svg>
-                        <span className="basis-1/3 text-center text-5xl">{state.sessionLenght}</span>
+                        <span className="basis-1/3 text-center text-5xl">{Math.floor(state.sessionLenght)}</span>
                         <svg  xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" className="bi bi-arrow-down-circle basis-1/3 h-auto hover:text-dark" viewBox="0 0 16 16" onClick={() => {dispatch({type: 'sessionDecrement'})}}>
                             <path fillRule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"/>
                         </svg>
@@ -150,7 +163,6 @@ function Screen(){
                     </svg>
                 </div>
             </div>
-
         </div>
     )
 }
