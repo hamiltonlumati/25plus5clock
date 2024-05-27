@@ -4,7 +4,9 @@ interface State{
     sessionLenght: number,
     breakLenght: number,
     timerStatus: string,
-    time: number[]
+    time: number[],
+    startButtonClass: string,
+    stopButtonClass: string
 }
 
 type Action = {type: 'sessionIncrement'} | {type: 'sessionDecrement'} | {type: 'breakIncrement'} | {type: 'breakDecrement'} | {type: 'restart'} | {type: 'timerStart'};
@@ -16,7 +18,10 @@ const reducer = (state: State, action: Action): State =>{
                 sessionLenght: state.sessionLenght+1,
                 breakLenght: state.breakLenght,
                 timerStatus: state.timerStatus,
-                time: [state.sessionLenght, 0]
+                time: [state.sessionLenght, 0],
+                startButtonClass: state.startButtonClass,
+                stopButtonClass: state.stopButtonClass
+
             }
         
         case 'sessionDecrement':
@@ -25,7 +30,9 @@ const reducer = (state: State, action: Action): State =>{
                     sessionLenght: state.sessionLenght-1,
                     breakLenght: state.breakLenght,
                     timerStatus: state.timerStatus,
-                    time: [state.sessionLenght, 0]
+                    time: [state.sessionLenght, 0],
+                    startButtonClass: state.startButtonClass,
+                    stopButtonClass: state.stopButtonClass
 
                 }
             }else{
@@ -33,7 +40,10 @@ const reducer = (state: State, action: Action): State =>{
                     sessionLenght: state.sessionLenght,
                     breakLenght: state.breakLenght,
                     timerStatus: state.timerStatus,
-                    time: [state.sessionLenght, 0]
+                    time: [state.sessionLenght, 0],
+                    startButtonClass: state.startButtonClass,
+                    stopButtonClass: state.stopButtonClass
+
                 }
             }
 
@@ -42,7 +52,10 @@ const reducer = (state: State, action: Action): State =>{
                 sessionLenght: state.sessionLenght,
                 breakLenght: state.breakLenght + 1,
                 timerStatus: state.timerStatus,
-                time: [state.sessionLenght, 0]
+                time: [state.sessionLenght, 0],
+                startButtonClass: state.startButtonClass,
+                stopButtonClass: state.stopButtonClass
+
             }
 
         case 'breakDecrement':
@@ -51,25 +64,32 @@ const reducer = (state: State, action: Action): State =>{
                     sessionLenght: state.sessionLenght,
                     breakLenght: state.breakLenght - 1,
                     timerStatus: state.timerStatus,
-                    time: [state.sessionLenght, 0]
+                    time: [state.sessionLenght, 0],
+                    startButtonClass: state.startButtonClass,
+                    stopButtonClass: state.stopButtonClass
+
                 }
             }else{
                 return{
                     sessionLenght: state.sessionLenght,
                     breakLenght: state.breakLenght,
                     timerStatus: state.timerStatus,
-                    time: [state.sessionLenght, 0]
+                    time: [state.sessionLenght, 0],
+                    startButtonClass: state.startButtonClass,
+                    stopButtonClass: state.stopButtonClass
+
                 }
             }
 
         case 'timerStart':
+
+            document.getElementById("startButton")!.setAttribute('class', 'bi bi-play-circle hover:text-orange hidden');
+            document.getElementById("stopButton")!.setAttribute('class', 'bi bi-play-circle hover:text-orange');
+
             var now1: any = moment();
             var sessionMinutes: number = state.sessionLenght;
-
-            document.getElementById('startStop')!.innerHTML = '<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z"/></svg>';
-
+            console.log(state.sessionLenght);
             var targetDate: any = now1.add(sessionMinutes, 'm');
-            
             var loopInterval = setInterval(function(){
                 var now: any = moment();
                 var distance: any = targetDate - now;
@@ -83,36 +103,50 @@ const reducer = (state: State, action: Action): State =>{
                     clearInterval(loopInterval);
                     document.getElementById("sessionDisplay")!.innerHTML = "00:00";
                 }
-                document.getElementById('startStop')?.addEventListener('click', () => {
-                    document.getElementById('startStop')!.innerHTML = '<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/>'
+                document.getElementById('stopButton')?.addEventListener('click', () => {
                     clearInterval(loopInterval);
-                } )
+                    document.getElementById("stopButton")!.setAttribute('class', 'bi bi-play-circle hover:text-orange hidden');
+                    document.getElementById("startButton")!.setAttribute('class', 'bi bi-play-circle hover:text-orange');
+                    var now2: any = moment();
+                    var difference: any = targetDate - now2;
+                    var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((difference % (1000 * 60)) / 1000);
+                    
+                    return{
+                        sessionLenght: minutes + (seconds/60),
+                        breakLenght: state.breakLenght,
+                        timerStatus: 'stopped',
+                        time: [minutes, seconds],
+                        startButtonClass: 'bi bi-play-circle hover:text-orange',
+                        stopButtonClass: 'bi bi-play-circle hover:text-orange hidden'
+                    }
+                } 
+            )
             }, 1000);
-            var now2: any = moment();
-            var difference: any = targetDate - now2;
-            var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((difference % (1000 * 60)) / 1000);
-            
             return{
-                sessionLenght: minutes + (seconds/60),
+                sessionLenght: state.sessionLenght,
                 breakLenght: state.breakLenght,
-                timerStatus: 'play',
-                time: [minutes, seconds]
-
+                timerStatus: 'stopped',
+                time: state.time,
+                startButtonClass: 'bi bi-play-circle hover:text-orange',
+                stopButtonClass: 'bi bi-play-circle hover:text-orange hidden'
             }
         
         case 'restart':
             return{
                 sessionLenght: 25,
                 breakLenght: 5,
-                timerStatus: 'play',
-                time: [state.sessionLenght, 0]
+                timerStatus: 'stopped',
+                time: [state.sessionLenght, 0],
+                startButtonClass: 'bi bi-play-circle hover:text-orange',
+                stopButtonClass: 'bi bi-play-circle hover:text-orange hidden'
+
             }
     }
 }
 
 function Screen(){
-    const initialState: State = {sessionLenght: 25, breakLenght: 5, timerStatus: 'stopped', time: [25, 0]}
+    const initialState: State = {sessionLenght: 25, breakLenght: 5, timerStatus: 'stopped', time: [25, 0], startButtonClass: 'bi bi-play-circle hover:text-orange', stopButtonClass: 'bi bi-play-circle hover:text-orange hidden'}
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -152,9 +186,14 @@ function Screen(){
                     60:00
                 </p>
                 <div className="flex flex-row gap-4 align-middle px-14 mt-2">
-                    <svg id="startStop" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-play-circle hover:text-orange" viewBox="0 0 16 16" onClick={() => {dispatch({type: 'timerStart'})}}>
+                    <svg id="startButton" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className={state.startButtonClass} viewBox="0 0 16 16" onClick={() => {dispatch({type: 'timerStart'})}}>
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                         <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/>
+                    </svg>
+
+                    <svg id="stopButton" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className={state.stopButtonClass} viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                        <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z"/>
                     </svg>
                     
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-arrow-repeat hover:text-orange" viewBox="0 0 16 16" onClick={() => {dispatch({type: 'restart'})}}>
