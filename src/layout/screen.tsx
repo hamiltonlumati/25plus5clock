@@ -10,7 +10,8 @@ import {
     timerStart,
     sessionPause,
     sessionCount,
-    sessionStop } from "../features/timer/timerSlice";
+    sessionStop,
+    sessionPaused } from "../features/timer/timerSlice";
 
 function Screen(){
 
@@ -23,15 +24,18 @@ function Screen(){
     const dispatch = useDispatch();
 
     useEffect(() =>{
-        setInterval(() => {
-            switch(timerStatus) {
-                case 'counting':
-                    if(time > 0){
-                        //console.log(state.timer.time);
-                        dispatch(sessionCount());
-                    }else{
-                        dispatch(sessionStop());
-                    }
+        setTimeout(() => {
+            console.log(time + timerStatus)
+            if(timerStatus == 'counting') {
+                if(time > 0){
+                    //console.log(state.timer.time);
+                    dispatch(sessionCount());
+                }else{
+                    dispatch(sessionStop());
+                }
+            }
+            if(timerStatus == 'paused'){
+                dispatch(sessionPaused());
             }
         }, 1000);
     })
@@ -69,7 +73,7 @@ function Screen(){
                     Session
                 </p>
                 <p className="text-center text-7xl" id="sessionDisplay">
-                    {Math.floor(time/60)}: {time%60}
+                    {Math.floor(time/60)}:{time%60}
                 </p>
                 <div className="flex flex-row gap-4 align-middle px-14 mt-2">
                     <svg id="startButton" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className={startButtonClass} viewBox="0 0 16 16" onClick={() => dispatch(timerStart())}>
