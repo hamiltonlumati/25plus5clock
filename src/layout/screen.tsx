@@ -1,6 +1,15 @@
 import { useReducer } from "react";
 import moment from "moment";
-interface State{
+import { RootState } from "../app/store";
+import { UseSelector, useDispatch } from "react-redux";
+import { 
+    sessionDecrement, 
+    sessionIncrement, 
+    breakDecrement, 
+    breakIncrement, 
+    restart, 
+    timerStart } from "../features/timer/timerSlice";
+/* interface State{
     sessionLenght: number,
     breakLenght: number,
     timerStatus: string,
@@ -111,15 +120,7 @@ const reducer = (state: State, action: Action): State =>{
                     var difference: any = targetDate - now2;
                     var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
                     var seconds = Math.floor((difference % (1000 * 60)) / 1000);
-                    
-                    return{
-                        sessionLenght: minutes + (seconds/60),
-                        breakLenght: state.breakLenght,
-                        timerStatus: 'stopped',
-                        time: [minutes, seconds],
-                        startButtonClass: 'bi bi-play-circle hover:text-orange',
-                        stopButtonClass: 'bi bi-play-circle hover:text-orange hidden'
-                    }
+                    state.sessionLenght = minutes;
                 } 
             )
             }, 1000);
@@ -144,12 +145,14 @@ const reducer = (state: State, action: Action): State =>{
             }
     }
 }
-
+ */
 function Screen(){
-    const initialState: State = {sessionLenght: 25, breakLenght: 5, timerStatus: 'stopped', time: [25, 0], startButtonClass: 'bi bi-play-circle hover:text-orange', stopButtonClass: 'bi bi-play-circle hover:text-orange hidden'}
+    /* const initialState: State = {sessionLenght: 25, breakLenght: 5, timerStatus: 'stopped', time: [25, 0], startButtonClass: 'bi bi-play-circle hover:text-orange', stopButtonClass: 'bi bi-play-circle hover:text-orange hidden'}
 
     const [state, dispatch] = useReducer(reducer, initialState);
+ */
 
+    const time = 
     return(
         <div className="h-auto bg-darkGreen pb-10 grid justify-center rounded">
             <div className="grid grid-cols-2 gap-20 justify-center w-full px-20 py-10">
