@@ -62,9 +62,9 @@ export const timerSlice = createSlice({
         },
 
         breakDecrement: (state) => {
-            if(state.sessionLenght > 1){
+            if(state.breakLenght > 1){
                 state.breakLenght -= 1;
-                state.breakLenght = state.sessionLenght;
+                state.sessionLenght = state.sessionLenght;
                 state.timerStatus = state.timerStatus;
                 state.time = [state.sessionLenght, 0];
                 state.startButtonClass = state.startButtonClass;
