@@ -4,8 +4,8 @@ import moment from "moment";
 export interface TimerState{
     sessionLenght: number,
     breakLenght: number,
-    timerStatus: string,
-    time: number[],
+    timerStatus: string, //options: stopped, counting, restarted, paused
+    time: number,
     startButtonClass: string,
     stopButtonClass: string
 }
@@ -14,7 +14,7 @@ const initialState: TimerState = {
     sessionLenght: 25, 
     breakLenght: 5, 
     timerStatus: 'stopped', 
-    time: [25, 0], 
+    time: 25*60, 
     startButtonClass: 'bi bi-play-circle hover:text-orange', 
     stopButtonClass: 'bi bi-play-circle hover:text-orange hidden'
 }
@@ -27,7 +27,7 @@ export const timerSlice = createSlice({
             state.sessionLenght += 1;
             state.breakLenght = state.breakLenght;
             state.timerStatus = state.timerStatus,
-            state.time = [state.sessionLenght, 0];
+            state.time = state.sessionLenght * 60;
             state.startButtonClass = state.startButtonClass;
             state.stopButtonClass = state.stopButtonClass
         },
@@ -37,14 +37,14 @@ export const timerSlice = createSlice({
                 state.sessionLenght -= 1;
                 state.breakLenght = state.breakLenght;
                 state.timerStatus = state.timerStatus;
-                state.time = [state.sessionLenght, 0];
+                state.time = state.sessionLenght * 60;
                 state.startButtonClass = state.startButtonClass;
                 state.stopButtonClass = state.stopButtonClass
             }else{
                 state.sessionLenght = state.sessionLenght;
                 state.breakLenght = state.breakLenght;
                 state.timerStatus = state.timerStatus;
-                state.time = [state.sessionLenght, 0];
+                state.time = state.sessionLenght * 60;
                 state.startButtonClass = state.startButtonClass;
                 state.stopButtonClass = state.stopButtonClass
             }
@@ -55,7 +55,7 @@ export const timerSlice = createSlice({
             state.sessionLenght = state.sessionLenght;
             state.breakLenght += 1;
             state.timerStatus = state.timerStatus,
-            state.time = [state.sessionLenght, 0];
+            state.time = state.sessionLenght * 60;
             state.startButtonClass = state.startButtonClass;
             state.stopButtonClass = state.stopButtonClass
         },
@@ -65,14 +65,14 @@ export const timerSlice = createSlice({
                 state.breakLenght -= 1;
                 state.sessionLenght = state.sessionLenght;
                 state.timerStatus = state.timerStatus;
-                state.time = [state.sessionLenght, 0];
+                state.time = state.sessionLenght * 60;
                 state.startButtonClass = state.startButtonClass;
                 state.stopButtonClass = state.stopButtonClass
             }else{
                 state.sessionLenght = state.sessionLenght;
                 state.breakLenght = state.breakLenght;
                 state.timerStatus = state.timerStatus;
-                state.time = [state.sessionLenght, 0];
+                state.time = state.sessionLenght * 60;
                 state.startButtonClass = state.startButtonClass;
                 state.stopButtonClass = state.stopButtonClass
             }
@@ -82,47 +82,36 @@ export const timerSlice = createSlice({
             state.sessionLenght = 25;
             state.breakLenght = 5;
             state.timerStatus = 'stopped';
-            state.time = [state.sessionLenght, 0];
+            state.time = state.sessionLenght * 60;
             state.startButtonClass = 'bi bi-play-circle hover:text-orange';
             state.stopButtonClass = 'bi bi-play-circle hover:text-orange hidden'
         },
 
         timerStart: (state) => {
-            document.getElementById("startButton")!.setAttribute('class', 'bi bi-play-circle hover:text-orange hidden');
-            document.getElementById("stopButton")!.setAttribute('class', 'bi bi-play-circle hover:text-orange');
+            state.time = state.sessionLenght * 60;
+            state.startButtonClass = 'bi bi-play-circle hover:text-orange hidden';
+            state.stopButtonClass = 'bi bi-play-circle hover:text-orange'
+            state.timerStatus = 'counting';
 
-            var now1: any = moment();
-            var sessionMinutes: number = state.sessionLenght;
-            console.log(state.sessionLenght);
-            var targetDate: any = now1.add(sessionMinutes, 'm');
-            var loopInterval = setInterval(function(){
-                var now: any = moment();
-                var distance: any = targetDate - now;
+        },
 
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        sessionCount: (state) => {
+            state.time -= 1;
+            console.log(state.time);
+        },
 
-                document.getElementById("sessionDisplay")!.innerHTML = minutes + ":" + seconds;
+        sessionPause: (state) => {
+            state.stopButtonClass = 'bi bi-play-circle hover:text-orange hidden';
+            state.startButtonClass = 'bi bi-play-circle hover:text-orange';
+            state.timerStatus = 'paused';
+        },
 
-                if (distance < 0) {
-                    clearInterval(loopInterval);
-                    document.getElementById("sessionDisplay")!.innerHTML = "00:00";
-                }
-                document.getElementById('stopButton')?.addEventListener('click', () => {
-                    clearInterval(loopInterval);
-                    document.getElementById("stopButton")!.setAttribute('class', 'bi bi-play-circle hover:text-orange hidden');
-                    document.getElementById("startButton")!.setAttribute('class', 'bi bi-play-circle hover:text-orange');
-                    var now2: any = moment();
-                    var difference: any = targetDate - now2;
-                    var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-                    var seconds = Math.floor((difference % (1000 * 60)) / 1000);
-                    state.sessionLenght = minutes;
-                } 
-            )
-            }, 1000);
+        sessionStop: (state) => {
+            state.timerStatus = 'stopped'
+            state.time = 0;
         }
     }
 })
 
-export const { sessionIncrement, sessionDecrement, breakIncrement, breakDecrement, restart, timerStart } = timerSlice.actions;
+export const { sessionIncrement, sessionDecrement, breakIncrement, breakDecrement, restart, timerStart, sessionCount, sessionPause, sessionStop } = timerSlice.actions;
 export default timerSlice.reducer

@@ -1,12 +1,16 @@
 import { RootState } from "../app/store";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 import { 
     sessionDecrement, 
     sessionIncrement, 
     breakDecrement, 
     breakIncrement, 
     restart, 
-    timerStart } from "../features/timer/timerSlice";
+    timerStart,
+    sessionPause,
+    sessionCount,
+    sessionStop } from "../features/timer/timerSlice";
 
 function Screen(){
 
@@ -14,7 +18,24 @@ function Screen(){
     const breakLenght = useSelector((state: RootState) => state.timer.breakLenght);
     const startButtonClass = useSelector((state: RootState) => state.timer.startButtonClass);
     const stopButtonClass = useSelector((state: RootState) => state.timer.stopButtonClass);
+    const timerStatus = useSelector((state: RootState) => state.timer.timerStatus);
+    const time = useSelector((state: RootState) => state.timer.time);
     const dispatch = useDispatch();
+
+    useEffect(() =>{
+        setInterval(() => {
+            switch(timerStatus) {
+                case 'counting':
+                    if(time > 0){
+                        //console.log(state.timer.time);
+                        dispatch(sessionCount());
+                    }else{
+                        dispatch(sessionStop());
+                    }
+            }
+        }, 1000);
+    })
+
     return(
         <div className="h-auto bg-darkGreen pb-10 grid justify-center rounded">
             <div className="grid grid-cols-2 gap-20 justify-center w-full px-20 py-10">
@@ -48,7 +69,7 @@ function Screen(){
                     Session
                 </p>
                 <p className="text-center text-7xl" id="sessionDisplay">
-                    60:00
+                    {Math.floor(time/60)}: {time%60}
                 </p>
                 <div className="flex flex-row gap-4 align-middle px-14 mt-2">
                     <svg id="startButton" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className={startButtonClass} viewBox="0 0 16 16" onClick={() => dispatch(timerStart())}>
@@ -56,7 +77,7 @@ function Screen(){
                         <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/>
                     </svg>
 
-                    <svg id="stopButton" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className={stopButtonClass} viewBox="0 0 16 16">
+                    <svg id="stopButton" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className={stopButtonClass} viewBox="0 0 16 16" onClick={() => dispatch(sessionPause())}>
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                         <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z"/>
                     </svg>
