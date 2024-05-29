@@ -15,7 +15,7 @@ const initialState: TimerState = {
     timerStatus: 'stopped', 
     time: 25*60, 
     startButtonClass: 'bi bi-play-circle hover:text-orange', 
-    stopButtonClass: 'bi bi-play-circle hover:text-orange hidden'
+    stopButtonClass: 'bi bi-pause-circle hover:text-orange hidden'
 }
 
 export const timerSlice = createSlice({
@@ -73,12 +73,12 @@ export const timerSlice = createSlice({
             state.timerStatus = 'stopped';
             state.time = state.sessionLenght * 60;
             state.startButtonClass = 'bi bi-play-circle hover:text-orange';
-            state.stopButtonClass = 'bi bi-play-circle hover:text-orange hidden'
+            state.stopButtonClass = 'bi bi-pause-circle hover:text-orange hidden'
         },
 
         timerStart: (state) => {
             state.startButtonClass = 'bi bi-play-circle hover:text-orange hidden';
-            state.stopButtonClass = 'bi bi-play-circle hover:text-orange'
+            state.stopButtonClass = 'bi bi-pause-circle hover:text-orange'
             state.timerStatus = 'counting';
 
         },
@@ -88,7 +88,7 @@ export const timerSlice = createSlice({
         },
 
         sessionPause: (state) => {
-            state.stopButtonClass = 'bi bi-play-circle hover:text-orange hidden';
+            state.stopButtonClass = 'bi bi-pause-circle hover:text-orange hidden';
             state.startButtonClass = 'bi bi-play-circle hover:text-orange';
             state.timerStatus = 'paused';
         },
