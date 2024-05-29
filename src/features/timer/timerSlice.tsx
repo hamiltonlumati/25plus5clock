@@ -23,10 +23,12 @@ export const timerSlice = createSlice({
     initialState,
     reducers: {
         sessionIncrement: (state) => {
-            state.sessionLenght += 1;
-            state.breakLenght = state.breakLenght;
-            state.startButtonClass = state.startButtonClass;
-            state.stopButtonClass = state.stopButtonClass
+            if(state.timerStatus == 'stopped' || state.timerStatus == 'paused'){
+                state.sessionLenght += 1;
+                state.breakLenght = state.breakLenght;
+                state.startButtonClass = state.startButtonClass;
+                state.stopButtonClass = state.stopButtonClass    
+            }
         },
 
         sessionDecrement:(state) => {
