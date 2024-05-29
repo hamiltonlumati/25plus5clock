@@ -32,38 +32,46 @@ export const timerSlice = createSlice({
         },
 
         sessionDecrement:(state) => {
-            if(state.sessionLenght > 1){
-                state.sessionLenght -= 1;
-                state.breakLenght = state.breakLenght;
-                state.startButtonClass = state.startButtonClass;
-                state.stopButtonClass = state.stopButtonClass
-            }else{
-                state.sessionLenght = state.sessionLenght;
-                state.breakLenght = state.breakLenght;
-                state.startButtonClass = state.startButtonClass;
-                state.stopButtonClass = state.stopButtonClass
+            if(state.timerStatus == 'stopped' || state.timerStatus == 'paused'){
+                if(state.sessionLenght > 1){
+                    state.sessionLenght -= 1;
+                    state.breakLenght = state.breakLenght;
+                    state.startButtonClass = state.startButtonClass;
+                    state.stopButtonClass = state.stopButtonClass
+                }else{
+                    state.sessionLenght = state.sessionLenght;
+                    state.breakLenght = state.breakLenght;
+                    state.startButtonClass = state.startButtonClass;
+                    state.stopButtonClass = state.stopButtonClass
+                }
+                
             }
-            
         },
 
         breakIncrement: (state) => {
-            state.sessionLenght = state.sessionLenght;
-            state.breakLenght += 1;
-            state.startButtonClass = state.startButtonClass;
-            state.stopButtonClass = state.stopButtonClass
+        if(state.timerStatus == 'stopped' || state.timerStatus == 'paused'){
+
+                state.sessionLenght = state.sessionLenght;
+                state.breakLenght += 1;
+                state.startButtonClass = state.startButtonClass;
+                state.stopButtonClass = state.stopButtonClass
+            }
         },
 
         breakDecrement: (state) => {
-            if(state.breakLenght > 1){
-                state.breakLenght -= 1;
-                state.sessionLenght = state.sessionLenght;
-                state.startButtonClass = state.startButtonClass;
-                state.stopButtonClass = state.stopButtonClass
-            }else{
-                state.sessionLenght = state.sessionLenght;
-                state.breakLenght = state.breakLenght;
-                state.startButtonClass = state.startButtonClass;
-                state.stopButtonClass = state.stopButtonClass
+            if(state.timerStatus == 'stopped' || state.timerStatus == 'paused'){
+
+                if(state.breakLenght > 1){
+                    state.breakLenght -= 1;
+                    state.sessionLenght = state.sessionLenght;
+                    state.startButtonClass = state.startButtonClass;
+                    state.stopButtonClass = state.stopButtonClass
+                }else{
+                    state.sessionLenght = state.sessionLenght;
+                    state.breakLenght = state.breakLenght;
+                    state.startButtonClass = state.startButtonClass;
+                    state.stopButtonClass = state.stopButtonClass
+                }
             }
         },
 
