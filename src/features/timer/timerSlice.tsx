@@ -15,7 +15,7 @@ const initialState: TimerState = {
     timerStatus: 'stopped', 
     time: 25*60, 
     startButtonClass: 'bi bi-play-circle hover:text-orange', 
-    stopButtonClass: 'bi bi-pause-circle hover:text-orange hidden'
+    stopButtonClass: 'hidden'
 }
 
 export const timerSlice = createSlice({
@@ -27,7 +27,8 @@ export const timerSlice = createSlice({
                 state.sessionLenght += 1;
                 state.breakLenght = state.breakLenght;
                 state.startButtonClass = state.startButtonClass;
-                state.stopButtonClass = state.stopButtonClass    
+                state.stopButtonClass = state.stopButtonClass;
+                state.time = state.sessionLenght * 60;    
             }
         },
 
@@ -37,7 +38,8 @@ export const timerSlice = createSlice({
                     state.sessionLenght -= 1;
                     state.breakLenght = state.breakLenght;
                     state.startButtonClass = state.startButtonClass;
-                    state.stopButtonClass = state.stopButtonClass
+                    state.stopButtonClass = state.stopButtonClass;
+                    state.time = state.sessionLenght * 60;    
                 }else{
                     state.sessionLenght = state.sessionLenght;
                     state.breakLenght = state.breakLenght;
@@ -81,11 +83,11 @@ export const timerSlice = createSlice({
             state.timerStatus = 'stopped';
             state.time = state.sessionLenght * 60;
             state.startButtonClass = 'bi bi-play-circle hover:text-orange';
-            state.stopButtonClass = 'bi bi-pause-circle hover:text-orange hidden'
+            state.stopButtonClass = 'hidden'
         },
 
         timerStart: (state) => {
-            state.startButtonClass = 'bi bi-play-circle hover:text-orange hidden';
+            state.startButtonClass = 'hidden';
             state.stopButtonClass = 'bi bi-pause-circle hover:text-orange'
             state.timerStatus = 'counting';
 
@@ -96,7 +98,7 @@ export const timerSlice = createSlice({
         },
 
         sessionPause: (state) => {
-            state.stopButtonClass = 'bi bi-pause-circle hover:text-orange hidden';
+            state.stopButtonClass = 'hidden';
             state.startButtonClass = 'bi bi-play-circle hover:text-orange';
             state.timerStatus = 'paused';
         },
