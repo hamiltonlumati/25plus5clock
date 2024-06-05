@@ -11,7 +11,8 @@ import {
     sessionPause,
     sessionCount,
     sessionStop,
-    sessionPaused } from "../features/timer/timerSlice";
+    sessionPaused,
+    timerChange } from "../features/timer/timerSlice";
 
 function Screen(){
 
@@ -21,22 +22,22 @@ function Screen(){
     const stopButtonClass = useSelector((state: RootState) => state.timer.stopButtonClass);
     const timerStatus = useSelector((state: RootState) => state.timer.timerStatus);
     const time = useSelector((state: RootState) => state.timer.time);
+    const timerName = useSelector((state: RootState) => state.timer.timerName);
     const dispatch = useDispatch();
 
     useEffect(() =>{
         setTimeout(() => {
-            console.log(time + timerStatus)
             if(timerStatus == 'counting') {
                 if(time > 0){
-                    //console.log(state.timer.time);
                     dispatch(sessionCount());
                 }else{
-                    dispatch(sessionStop());
+                    dispatch(timerChange());
                 }
             }
             if(timerStatus == 'paused'){
                 dispatch(sessionPaused());
             }
+
         }, 1000);
     })
 
@@ -70,7 +71,7 @@ function Screen(){
             </div>
             <div className="grid justify-center rounded-lg bg-dark text-lightGreen w-auto mx-52 py-2">
                 <p className="bg-white p-1 text-center text-lg">
-                    Session
+                    {timerName}
                 </p>
                 <p className="text-center text-7xl" id="sessionDisplay">
                     {Math.floor(time/60)}:{time%60}

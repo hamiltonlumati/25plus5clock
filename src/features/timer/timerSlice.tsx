@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-
 export interface TimerState{
     sessionLenght: number,
     breakLenght: number,
     timerStatus: string, //options: stopped, counting, restarted, paused
     time: number,
     startButtonClass: string,
-    stopButtonClass: string
+    stopButtonClass: string,
+    timerName: string //options: Session, Break
 }
 
 const initialState: TimerState = {
@@ -15,7 +15,8 @@ const initialState: TimerState = {
     timerStatus: 'stopped', 
     time: 25*60, 
     startButtonClass: 'bi bi-play-circle hover:text-orange', 
-    stopButtonClass: 'hidden'
+    stopButtonClass: 'hidden',
+    timerName: 'Session'
 }
 
 export const timerSlice = createSlice({
@@ -78,9 +79,9 @@ export const timerSlice = createSlice({
         },
 
         restart: (state) => {
+            state.timerStatus = 'stopped';
             state.sessionLenght = 25;
             state.breakLenght = 5;
-            state.timerStatus = 'stopped';
             state.time = state.sessionLenght * 60;
             state.startButtonClass = 'bi bi-play-circle hover:text-orange';
             state.stopButtonClass = 'hidden'
@@ -110,9 +111,19 @@ export const timerSlice = createSlice({
         sessionStop: (state) => {
             state.timerStatus = 'stopped'
             state.time = 0;
+        },
+        
+        timerChange: (state) => {
+            if(state.timerName == 'Session'){
+                state.timerName = 'Break';
+                state.time = state.breakLenght * 60;
+            }else if(state.timerName == 'Break'){
+                state.timerName = 'Session';
+                state.time = state.sessionLenght * 60;
+            }
         }
     }
 })
 
-export const { sessionIncrement, sessionDecrement, breakIncrement, breakDecrement, restart, timerStart, sessionCount, sessionPause, sessionStop, sessionPaused } = timerSlice.actions;
+export const { sessionIncrement, sessionDecrement, breakIncrement, breakDecrement, restart, timerStart, sessionCount, sessionPause, sessionStop, sessionPaused, timerChange } = timerSlice.actions;
 export default timerSlice.reducer
