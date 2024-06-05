@@ -14,5 +14,8 @@ export default {
     },
     extend: {},
   },
+  corePlugins: {
+    visibility: false,
+  },
   plugins: [],
 }

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.hidden{
+  display: none;
+}
+
 .roboto-thin {
     font-family: "Roboto", sans-serif;
     font-weight: 100;
