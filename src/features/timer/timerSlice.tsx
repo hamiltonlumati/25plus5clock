@@ -53,7 +53,6 @@ export const timerSlice = createSlice({
 
         breakIncrement: (state) => {
         if(state.timerStatus == 'stopped' || state.timerStatus == 'paused'){
-
                 state.sessionLenght = state.sessionLenght;
                 state.breakLenght += 1;
                 state.startButtonClass = state.startButtonClass;
@@ -84,7 +83,8 @@ export const timerSlice = createSlice({
             state.breakLenght = 5;
             state.time = state.sessionLenght * 60;
             state.startButtonClass = 'bi bi-play-circle hover:text-orange';
-            state.stopButtonClass = 'hidden'
+            state.stopButtonClass = 'hidden';
+            state.timerName = 'Session';
         },
 
         timerStart: (state) => {
@@ -114,6 +114,8 @@ export const timerSlice = createSlice({
         },
         
         timerChange: (state) => {
+            var audioElement = document.getElementById('beep') as HTMLAudioElement;
+            audioElement.play();
             if(state.timerName == 'Session'){
                 state.timerName = 'Break';
                 state.time = state.breakLenght * 60;
@@ -125,5 +127,5 @@ export const timerSlice = createSlice({
     }
 })
 
-export const { sessionIncrement, sessionDecrement, breakIncrement, breakDecrement, restart, timerStart, sessionCount, sessionPause, sessionStop, sessionPaused, timerChange } = timerSlice.actions;
+export const { sessionIncrement, sessionDecrement, breakIncrement, breakDecrement, restart, timerStart, sessionCount, sessionPause, sessionPaused, timerChange } = timerSlice.actions;
 export default timerSlice.reducer

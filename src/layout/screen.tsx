@@ -10,7 +10,6 @@ import {
     timerStart,
     sessionPause,
     sessionCount,
-    sessionStop,
     sessionPaused,
     timerChange } from "../features/timer/timerSlice";
 
@@ -93,6 +92,7 @@ function Screen(){
                     </svg>
                 </div>
             </div>
+            <audio id="beep" preload="auto" src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/BeepSound.wav"></audio>
         </div>
     )
 }
