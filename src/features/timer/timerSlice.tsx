@@ -24,12 +24,14 @@ export const timerSlice = createSlice({
     initialState,
     reducers: {
         sessionIncrement: (state) => {
-            if(state.timerStatus == 'stopped' || state.timerStatus == 'paused'){
-                state.sessionLenght += 1;
-                state.breakLenght = state.breakLenght;
-                state.startButtonClass = state.startButtonClass;
-                state.stopButtonClass = state.stopButtonClass;
-                state.time = state.sessionLenght * 60;    
+            if(state.sessionLenght < 60){
+                if(state.timerStatus == 'stopped' || state.timerStatus == 'paused'){
+                    state.sessionLenght += 1;
+                    state.breakLenght = state.breakLenght;
+                    state.startButtonClass = state.startButtonClass;
+                    state.stopButtonClass = state.stopButtonClass;
+                    state.time = state.sessionLenght * 60;    
+                }
             }
         },
 
@@ -52,11 +54,13 @@ export const timerSlice = createSlice({
         },
 
         breakIncrement: (state) => {
-        if(state.timerStatus == 'stopped' || state.timerStatus == 'paused'){
-                state.sessionLenght = state.sessionLenght;
-                state.breakLenght += 1;
-                state.startButtonClass = state.startButtonClass;
-                state.stopButtonClass = state.stopButtonClass
+            if(state.sessionLenght < 60){
+                if(state.timerStatus == 'stopped' || state.timerStatus == 'paused'){
+                    state.sessionLenght = state.sessionLenght;
+                    state.breakLenght += 1;
+                    state.startButtonClass = state.startButtonClass;
+                    state.stopButtonClass = state.stopButtonClass
+                }
             }
         },
 
