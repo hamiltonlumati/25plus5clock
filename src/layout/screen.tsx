@@ -73,7 +73,7 @@ function Screen(){
                     {timerName}
                 </p>
                 <p className="text-center text-7xl" id="sessionDisplay">
-                    {Math.floor(time/60)}:{time%60}
+                    {Math.floor(time/60).toString().padStart(2,'0')}:{(time%60).toString().padStart(2,'0')}
                 </p>
                 <div className="flex flex-row gap-4 align-middle px-14 mt-2">
                     <svg id="startButton" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className={startButtonClass} viewBox="0 0 16 16" onClick={() => dispatch(timerStart())}>
